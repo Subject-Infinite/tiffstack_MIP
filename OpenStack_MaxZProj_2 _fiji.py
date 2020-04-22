@@ -4,6 +4,7 @@ import os
 from ij.io import DirectoryChooser
 from ij import IJ, ImagePlus, VirtualStack
 from ij.plugin import ZProjector
+from javax.swing import JOptionPane
 
 def maxZprojection(inputimg):
 	zp = ZProjector(inputimg)
@@ -13,6 +14,13 @@ def maxZprojection(inputimg):
 	return Zproj
 
 sourceDir = DirectoryChooser("Choose directory to load stack from").getDirectory()
+os.chdir(sourceDir)
+print os.getcwd()
+curdir = os.path.split(os.getcwd())[1] 
+saveDir = sourceDir # for custom saving directory, simply replace this particular 'sourceDir' with the save directory of choice. 
+# Insert new save directory up until the final '\' here, e.g. saveDir = "C:\Users\UserName\Documents\" or the equivalent for your operating system
+#default save directory will just save the output MIP into the same folder the other tifs of the z stack came from. may not be optimal.
+
 if not sourceDir:
 	exit() # If you do not select a directory, terminates program
 # Assumes all files have the same size
@@ -34,31 +42,24 @@ OnscreenImage = ImagePlus(sourceDir,ImStack)
 OnscreenImage.show()
 
 print "Generating MIP, waiting..."
-outimp = maxZprojection(OnscreenImage)
+outimp = maxZprojection(OnscreenImage) #generate max projection
 outimp.show()
 print "Max projection generated"
 
-#@ String (label="Would you like to save the max proj? y = save, anything else = don't save", description="Save as") SaveQuery
-	#@output String greeting
+###To remove save functionality, just remove all beyond here-
+
+SaveQuery = JOptionPane.showInputDialog(None, "Would you like to save the max proj? y = save, anything else = don't save")
+
 print SaveQuery
-savename = sourceDir+"_MIP.tif"
-if SaveQuery.upper=='Y':
+print SaveQuery.upper()
 
-	#@ String (label="Would you like to rename the max proj? (if not, will use directory name+MIP). y = yes, otherwise no", description="Save as rename") RenameQuery
-	#@output String greeting
-	print "Hello"
-	
-	# RenameQuery=raw_input("Would you like to rename the max proj? (if not, will use directory name+MIP). y = yes, otherwise no")
-	if RenameQuery.upper=='Y':
-		#@ String (label="type new name", description="Rename") savename
-		#@output String greeting
-		
-		# savename = raw_input("type new name:")
-		print "hello"
-	else:
-		pass
+if SaveQuery.upper()=='Y':
+	RenameQuery = JOptionPane.showInputDialog(None, "Would you like to rename the max proj? (if not, will use directory name+_MIP). y = yes, otherwise no")
+	if RenameQuery.upper()=='Y':
+		curdir = JOptionPane.showInputDialog(None, "Input new name for Max projection")
+	savename = saveDir+curdir+"_MIP.tif"
+	print "saving...."
 	IJ.save(outimp, savename)
+	print "saved as", savename
 else:
-	pass
-
-#exit()
+	print "MIP not saved"
