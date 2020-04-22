@@ -7,17 +7,17 @@ Opens a folder containing an image series of Z slices (single time point), and o
 The macro then creates a maximum intensity projection (MIP) from the virtual stack and outputs that in a separarte image.  
 The program then offers the option to save the MIP, and rename the output MIP.
 
-1. [macro_1](https://i.imgur.com/BmIBzWD.png)
+1. ![macro_1](https://i.imgur.com/BmIBzWD.png)
 
-2. [macro_2](https://i.imgur.com/57TTVtf.png)
+2. ![macro_2](https://i.imgur.com/57TTVtf.png)
 
-3. [macro_3](https://i.imgur.com/fMaAZUG.png)
+3. ![macro_3](https://i.imgur.com/fMaAZUG.png)
 
-4. [macro_4](https://i.imgur.com/G0jnTmK.png)
+4. ![macro_4](https://i.imgur.com/G0jnTmK.png)
 
-5. [macro_5](https://i.imgur.com/gFpiYJg.png)
+5. ![macro_5](https://i.imgur.com/gFpiYJg.png)
 
-6. [macro_6](https://i.imgur.com/FXXmCck.png)
+6. ![macro_6](https://i.imgur.com/FXXmCck.png)
 
 issues: Will not open multiple timepoints in 4D hyperstack, only works on single timepoint data. (the code will technically run on multiple timepoints but the output will be garbled, it's a simple program)  
 Setting save directory will have to be done via editting the saveDir variable at the start of the code. Set it to the path of the directory you want to save the MIP to, as the program will automatically output to the folder you read the tifs from, which may not be ideal for if you want to read that folder stack again in future.  
