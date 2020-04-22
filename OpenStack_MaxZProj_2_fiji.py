@@ -15,7 +15,6 @@ def maxZprojection(inputimg):
 
 sourceDir = DirectoryChooser("Choose directory to load stack from").getDirectory()
 os.chdir(sourceDir)
-print os.getcwd()
 curdir = os.path.split(os.getcwd())[1] 
 saveDir = sourceDir # for custom saving directory, simply replace this particular 'sourceDir' with the save directory of choice. 
 # Insert new save directory up until the final '\' here, e.g. saveDir = "C:\Users\UserName\Documents\" or the equivalent for your operating system
@@ -49,9 +48,6 @@ print "Max projection generated"
 ###To remove save functionality, just remove all beyond here-
 
 SaveQuery = JOptionPane.showInputDialog(None, "Would you like to save the max proj? y = save, anything else = don't save")
-
-print SaveQuery
-print SaveQuery.upper()
 
 if SaveQuery.upper()=='Y':
 	RenameQuery = JOptionPane.showInputDialog(None, "Would you like to rename the max proj? (if not, will use directory name+_MIP). y = yes, otherwise no")
