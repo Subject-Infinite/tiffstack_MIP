@@ -11,3 +11,4 @@ issues: Will not open multiple timepoints in 4D hyperstack, only works on single
 Setting save directory will have to be done via editting the saveDir variable at the start of the code. Set it to the path of the directory you want to save the MIP to, as the program will automatically output to the folder you read the tifs from, which may not be ideal for if you want to read that folder stack again in future.  
 
 
+Made to be Fiji ImageJ (v1.52p) Jython compatible
