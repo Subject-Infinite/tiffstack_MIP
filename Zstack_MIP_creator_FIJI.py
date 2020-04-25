@@ -30,31 +30,31 @@ def obtain_prefixes():
 	return pref_dict
 
 class choice_gui:
-		
 	def listSelect(self, event):
 		self.index = self.lst.selectedIndex
-	
-	def clickhere(self, event):
-		self.lst.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+			
+	def clickhere(self,event):
+		self.lst.selectionMode = (ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
 		print "clicked"
-		self.itemSelected = sorted(self.lst.selectedValues[:])
-		print self.itemSelected
-
+		self.itemSelected = list(sorted(self.lst.selectedValues[:]))
+		print "item selected:", self.itemSelected
 		if self.radiobutton1.isSelected():
 			self.saveState = "Y"
 			print "Save MIPs!"
 		if self.radiobutton2.isSelected():
 			self.saveState = "N"
 			print "Don't save MIPs!"
+		self.exeunt = JOptionPane.showConfirmDialog(None, "You have chosen to make MIPs out of \n" + str(self.itemSelected) + "\n Proceed?" , "Proceed?", JOptionPane.YES_NO_OPTION)
+		self.clickEx()
 		
-		exeunt = JOptionPane.showConfirmDialog(None, "You have chosen to make MIPs out of \n" + str(self.itemSelected) + "\n Proceed?" , "Proceed?", JOptionPane.YES_NO_OPTION)
-		if exeunt == JOptionPane.YES_OPTION:
+	def clickEx(self):
+		if self.exeunt == JOptionPane.YES_OPTION:
 			print "confirmed"
 			self.frame.setVisible(False)
-			self.outputlist = list(self.itemSelected)
 		else:
 			print "cancelled"
-
+		return self.itemSelected
+		
 	def __init__(self, lst):
 		self.frame = JFrame("Image Selection")
 		self.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
@@ -91,11 +91,14 @@ class choice_gui:
 
 		self.frame.setVisible(True)
 
+	def __str__(self):
+		return self.outputlist
+
 
 
 dict1 = obtain_prefixes()
 obtain_prefixes_keys = list(dict1.keys())
 print "keys = ", obtain_prefixes_keys
 choice = choice_gui(obtain_prefixes_keys)
-#print choice.outputlist
+print "choice.stuff: ", choice.clickEx()
 #print os.getcwd()
