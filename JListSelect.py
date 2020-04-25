@@ -1,5 +1,6 @@
-from javax.swing import JFrame, JPanel, JLabel, JList, JButton, ListSelectionModel
+from javax.swing import JFrame, JPanel, JLabel, JList, JButton, ListSelectionModel, JOptionPane
 from java.awt import BorderLayout
+import sys
 
 frame = JFrame("JList Example")
 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
@@ -15,7 +16,10 @@ def listSelect(event):
 def clickhere(event):
    lst.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
    print "clicked"
-   print lst.selectedValues[:]
+   selecteditems = lst.selectedValues[:]
+   #print selecteditems
+   closeQuery = JOptionPane.showInputDialog(None, "You have selected " + "\n" + str(selecteditems) + "\n" + "Proceed?")
+   frame.setVisible(False)
    #upon clicking, ask 'are you sure?' and then close
 
 #frame.setDefaultCloseOperation(clickhere)
@@ -27,7 +31,7 @@ frame.add(lst, BorderLayout.NORTH)
 frame.add(lbl1, BorderLayout.SOUTH)
 lst.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
 button = JButton('Select item(s)', actionPerformed = clickhere)
-print clickhere
+#print clickhere
 frame.add(button, BorderLayout.SOUTH)
 frame.setVisible(True)
 

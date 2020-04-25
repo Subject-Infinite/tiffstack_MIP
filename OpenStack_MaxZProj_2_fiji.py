@@ -24,6 +24,7 @@ if not sourceDir:
 	exit() # If you do not select a directory, terminates program
 # Assumes all files have the same size
 ImStack = None
+#print "os.walk: ", list(os.walk(sourceDir))
 for root, directories, filenames in os.walk(sourceDir):
 	for filename in filenames:
 	  # Skip non-TIFF files
