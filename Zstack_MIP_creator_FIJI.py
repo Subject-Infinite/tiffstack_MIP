@@ -2,6 +2,7 @@ import os
 from ij.io import DirectoryChooser
 from javax.swing import JFrame, JPanel, JLabel, JList, JButton, ListSelectionModel, JOptionPane, JScrollPane, JTextArea, JSplitPane, JRadioButton, Box, ButtonGroup, BoxLayout
 from java.awt import BorderLayout, Dimension
+import threading
 
 def obtain_prefixes():
 	sourceDir = DirectoryChooser("Choose directory to load stack from").getDirectory()
@@ -51,17 +52,26 @@ class choice_gui:
 		if self.exeunt == JOptionPane.YES_OPTION:
 			print "confirmed"
 			self.frame.setVisible(False)
+			self.event_indicator = "Y"
+			self.get_selected=self.itemSelected
 		else:
 			print "cancelled"
-		return self.itemSelected
-		
+				
 	def __init__(self, lst):
+		self.exeunt = ""
+		self.itemSelected = ""
+		self.get_selected = ""
+		self.event_indicator = "X"
+
+	
 		self.frame = JFrame("Image Selection")
 		self.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
 		self.frame.setLocation(100,100)
 		self.frame.setSize(640,250)
 
 		self.frame.setLayout(BorderLayout())
+####run everything from within the class? Insert def obtain_prefixes() and call obtain_prefixes() here? Bundle everything into class, MIP creation further down after box params
+		
 		self.lang=lst
 
 		self.lst = JList(self.lang, valueChanged = self.listSelect)
@@ -91,14 +101,27 @@ class choice_gui:
 
 		self.frame.setVisible(True)
 
-	def __str__(self):
-		return self.outputlist
-
-
+	#def __str__(self):
+	#	return self.outputlist
 
 dict1 = obtain_prefixes()
 obtain_prefixes_keys = list(dict1.keys())
+choice = choice_gui(obtain_prefixes_keys)
+
+def main():
+	thread = threading.Thread(target=choice)
+	thread.start()
+	thread.join()
+	print "get_selected is: ", choice.get_selected
+
+main()
+
+'''
 print "keys = ", obtain_prefixes_keys
 choice = choice_gui(obtain_prefixes_keys)
-print "choice.stuff: ", choice.clickEx()
+print "choice.stuff: ", choice.get_selected
 #print os.getcwd()
+'''
+
+
+	
