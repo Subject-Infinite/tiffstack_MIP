@@ -56,6 +56,3 @@ Specify the directory into which you want the program to save the MIPs in. If yo
 7. ![macro_7](https://i.imgur.com/jh9VbMH.png)
 
 Stacks and MIPs will open in separate windows. A non destructive text overlay is placed in the top left corner of every stack and MIP, displaying the prefix they derive from, so you know which one is which. 
-
-The MIP and virtual stack are kept separate, if you wish to make separate manipulations.
-
