@@ -1,3 +1,5 @@
+###A Fiji ImageJ plugin to pull stacks of varying prefixes from a folder. Only works on single channel, single timepoint images for now
+
 import os
 from ij.io import DirectoryChooser
 from ij import IJ, ImagePlus, VirtualStack, WindowManager
@@ -112,53 +114,69 @@ class choice_gui:
 ###################
 				
 	def __init__(self):
+#obtain prefixes from folder		
+		self.dict1 = self.obtain_prefixes() #Run prefix selection function - sets source directory, requests prefix size, outputs prefix dictionary
+		lst = list(self.dict1.keys()) #pull prefixes only, as list		
+		self.lang=lst
+		self.lst = JList(self.lang, valueChanged = self.listSelect) # pass prefix list to GUI selection list
 		
+# general GUI layout parameters, no data processing here
 		self.frame = JFrame("Image Selection")
 		self.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
 		self.frame.setLocation(100,100)
 		self.frame.setSize(640,250)
-
 		self.frame.setLayout(BorderLayout())
-		
-		self.dict1 = self.obtain_prefixes()
-		lst = list(self.dict1.keys())
-		
-		self.lang=lst
-
-		self.lst = JList(self.lang, valueChanged = self.listSelect)
 
 		self.frame.add(self.lst, BorderLayout.NORTH)
 		self.lst.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
 		self.button1 = JButton('Select item(s)', actionPerformed = self.clickhere)
-#Save option radio button	
+		
+#Save option radio buttons and file extension selection	
+		#set main right panel (sub panels will fit within this)
+		rightpanel = JPanel()
+		rightpanel.setLayout(BoxLayout(rightpanel, BoxLayout.Y_AXIS))
+		#set up savestate panel		
+		buttonpanel = JPanel()
 		self.radiobutton1 = JRadioButton("Open selected 3D stacks and max projections \n and save max projections", True)
 		self.radiobutton2 = JRadioButton("Open selected 3D stacks and max projections \n and DO NOT save max projections")		
-		buttonpanel = JPanel()
 		infoLabel = JLabel("Hold ctrl and click multiple prefixes to select multiple options \n will load stacks and MIPs separately")
-		infoLabel2 = JLabel("type file extension")
-		self.filetype = JTextField(".tif",15)
 		grp = ButtonGroup()
 		grp.add(self.radiobutton1)
 		grp.add(self.radiobutton2)
 		buttonpanel.setLayout(BoxLayout(buttonpanel, BoxLayout.Y_AXIS))
 		buttonpanel.add(Box.createVerticalGlue())
-		buttonpanel.add(infoLabel2)
-		buttonpanel.add(self.filetype)
 		buttonpanel.add(infoLabel)
 		buttonpanel.add(self.radiobutton1)
 		buttonpanel.add(self.radiobutton2)
 		buttonpanel.add(Box.createRigidArea(Dimension(0,25)))
-#split list and radiobutton pane (construct overall window)		
+		#set up file extension panel
+		filetypepanel = JPanel()
+		infoLabel2 = JLabel("type file extension")
+		self.filetype = JTextField(".tif",15)
+		self.filetype.setSize(100,100)
+		filetypepanel.add(infoLabel2)
+		filetypepanel.add(self.filetype)		
+		
+		########### WIP - integrate prefix selection with main pane, with dynamically updating prefix list
+		##infoLabel3 = JLabel("how long is the file prefix to group by?(integer value only)")
+		##self.prefix_init = JTextField()
+		##buttonpanel.add(infoLabel3)
+		##buttonpanel.add(self.prefix_init)
+		########### !WIP
+		#add file extension and savestate panels to main panel
+		rightpanel.add(filetypepanel)
+		rightpanel.add(buttonpanel)
+		
+#split list and radiobutton pane (construct overall window)
 		spl = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, JScrollPane(self.lst),JLabel("rightpane"))
 		spl.leftComponent = JScrollPane(self.lst)
-		spl.rightComponent = buttonpanel
-
+		spl.setDividerLocation(100)
+		spl.rightComponent = rightpanel
 		self.frame.add(spl)
 		self.frame.add(self.button1, BorderLayout.SOUTH)
-
+		
+# GUI layout done, initialise GUI to select prefixes, file extension and save option
 		self.frame.setVisible(True)
-
-
 
 choice = choice_gui()
 choice
