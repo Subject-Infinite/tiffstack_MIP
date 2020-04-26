@@ -5,9 +5,8 @@ from ij.io import DirectoryChooser
 from ij import IJ, ImagePlus, VirtualStack, WindowManager
 from ij.plugin import ZProjector
 from ij.gui import Roi, Overlay, TextRoi
-from javax.swing import JFrame, JPanel, JLabel, JList, JButton, ListSelectionModel, JOptionPane, JScrollPane, JTextArea, JSplitPane, JRadioButton, Box, ButtonGroup, BoxLayout, JTextField
-from java.awt import BorderLayout, Dimension, Font, Color
-
+from javax.swing import JFrame, JPanel, JLabel, JList, JButton, ListSelectionModel, JOptionPane, JScrollPane, JTextArea, JSplitPane, JRadioButton, Box, ButtonGroup, BoxLayout, JTextField, SwingConstants
+from java.awt import BorderLayout, Dimension, Font, Color, Component, FlowLayout
 class choice_gui:
 
 ################ input function
@@ -133,7 +132,7 @@ class choice_gui:
 		self.frame = JFrame("Image Selection")
 		self.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
 		self.frame.setLocation(100,100)
-		self.frame.setSize(800,400)
+		self.frame.setSize(800,350)
 		self.frame.setLayout(BorderLayout())
 
 		self.frame.add(self.lst, BorderLayout.NORTH)
@@ -144,29 +143,36 @@ class choice_gui:
 		#set main right panel (sub panels will fit within this)
 		rightpanel = JPanel()
 		rightpanel.setLayout(BoxLayout(rightpanel, BoxLayout.Y_AXIS))
+		
 		#set up savestate panel		
 		buttonpanel = JPanel()
 		self.radiobutton1 = JRadioButton("Open selected 3D stacks and max projections \n and save max projections", True)
 		self.radiobutton2 = JRadioButton("Open selected 3D stacks and max projections \n and DO NOT save max projections")		
-		infoLabel = JLabel("Hold ctrl and click multiple prefixes to select multiple options. \n Will load stacks and MIPs separately")
+		infoLabel = JLabel("<html>Hold ctrl and click multiple prefixes to select multiple options. Will load stacks and MIPs separately <br><br> Type file extension in text field below:</html>", SwingConstants.LEFT)
 		grp = ButtonGroup()
 		grp.add(self.radiobutton1)
 		grp.add(self.radiobutton2)
 		#buttonpanel.setLayout(BoxLayout(buttonpanel, BoxLayout.Y_AXIS))
 		buttonpanel.add(Box.createVerticalGlue())
 		buttonpanel.add(infoLabel)
+		buttonpanel.add(Box.createRigidArea(Dimension(0,5)))
 		buttonpanel.add(self.radiobutton1)
+		buttonpanel.add(Box.createRigidArea(Dimension(0,5)))
 		buttonpanel.add(self.radiobutton2)
-		buttonpanel.add(Box.createRigidArea(Dimension(0,25)))
-		filetypepanel = JPanel()
-		#filetypepanel.setLayout(BoxLayout(filetypepanel, BoxLayout.Y_AXIS))
-		infoLabel2 = JLabel("type file extension")
-		self.filetype = JTextField(".tif",15)
-		self.filetype.setSize(100,100)
-		filetypepanel.add(infoLabel)
-		filetypepanel.add(infoLabel2)
-		filetypepanel.add(self.filetype)		
 		
+		#file extension instruction panel
+		infopanel = JPanel()
+		infopanel.setLayout(FlowLayout(FlowLayout.LEFT))
+		infopanel.setMaximumSize(infopanel.setPreferredSize(Dimension(650,100)))
+		infopanel.add(infoLabel)
+
+		#file extension input
+		inputPanel = JPanel()
+		inputPanel.setLayout(BoxLayout(inputPanel, BoxLayout.X_AXIS))
+		self.filetype = JTextField(".tif",15)
+		self.filetype.setMaximumSize(self.filetype.getPreferredSize())	
+		inputPanel.add(self.filetype)
+			
 		########### WIP - integrate prefix selection with main pane, with dynamically updating prefix list
 		##infoLabel3 = JLabel("how long is the file prefix to group by?(integer value only)")
 		##self.prefix_init = JTextField()
@@ -174,7 +180,8 @@ class choice_gui:
 		##buttonpanel.add(self.prefix_init)
 		########### !WIP
 		#add file extension and savestate panels to main panel
-		rightpanel.add(filetypepanel)
+		rightpanel.add(infopanel)
+		rightpanel.add(inputPanel)
 		rightpanel.add(buttonpanel,BorderLayout.EAST)
 		
 #split list and radiobutton pane (construct overall window)
