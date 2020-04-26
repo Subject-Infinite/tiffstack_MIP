@@ -2,9 +2,8 @@ import os
 from ij.io import DirectoryChooser
 from ij import IJ, ImagePlus, VirtualStack, WindowManager
 from ij.plugin import ZProjector
-from javax.swing import JFrame, JPanel, JLabel, JList, JButton, ListSelectionModel, JOptionPane, JScrollPane, JTextArea, JSplitPane, JRadioButton, Box, ButtonGroup, BoxLayout
+from javax.swing import JFrame, JPanel, JLabel, JList, JButton, ListSelectionModel, JOptionPane, JScrollPane, JTextArea, JSplitPane, JRadioButton, Box, ButtonGroup, BoxLayout, JTextField
 from java.awt import BorderLayout, Dimension
-import threading
 
 class choice_gui:
 
@@ -26,7 +25,6 @@ class choice_gui:
 		
 		unique_prefix = sorted(set(prefixlist))
 		self.pref_dict = {}
-		#print unique_prefix
 		
 		for a in unique_prefix:
 			pref_list = []
@@ -58,6 +56,7 @@ class choice_gui:
 	def clickEx(self):
 		if self.exeunt == JOptionPane.YES_OPTION:
 			print "confirmed"
+			self.fileExt = str(self.filetype.getText())
 			self.frame.setVisible(False)
 			if self.saveState=="Y":
 				self.saveDir = DirectoryChooser("Choose directory to save MIPs to").getDirectory()
@@ -76,29 +75,18 @@ class choice_gui:
 
 	def createMIP(self):
 		print "starting createMIP"
-		#ImStack = None
-		#print "os.walk: ", list(os.walk(sourceDir))
-		for a in self.itemSelected:#######
+		for a in self.itemSelected:
 			ImStack = None
-			#print "createMIP a = ", a
 			for filename in self.dict1.get(a):
-				#print "createMIP self dict1:::", self.dict1.get(a)
-				self.savfileName = filename[:-4]
-				#print "createMIP filename--", filename
-	 			# Skip non-TIFF files
-				if not filename.endswith(".tif"):
+				self.savfileName = a
+				if not filename.endswith(self.fileExt):
 					continue
-				#path = os.path.join(root, filename)########
 	 			path = self.sourceDir + filename
-	 			#print "path = ", path
 				# Upon finding the first image, initialize the VirtualStack
 				if ImStack is None:
-					#print "path...", path
 					imp = IJ.openImage(path)
-					#WindowManager.makeUniqueName(a)
 					ImStack = VirtualStack(imp.width, imp.height, None, self.sourceDir)
 				# Add a slice, relative to the sourceDIr
-				#print "adding ", filename
 				ImStack.addSlice(filename)
 			
 			OnscreenImage = ImagePlus(self.sourceDir,ImStack)
@@ -131,7 +119,6 @@ class choice_gui:
 		self.frame.setSize(640,250)
 
 		self.frame.setLayout(BorderLayout())
-####run everything from within the class? Insert def obtain_prefixes() and call obtain_prefixes() here? Bundle everything into class, MIP creation further down after box params
 		
 		self.dict1 = self.obtain_prefixes()
 		lst = list(self.dict1.keys())
@@ -148,11 +135,15 @@ class choice_gui:
 		self.radiobutton2 = JRadioButton("Open selected 3D stacks and max projections \n and DO NOT save max projections")		
 		buttonpanel = JPanel()
 		infoLabel = JLabel("Hold ctrl and click multiple prefixes to select multiple options \n will load stacks and MIPs separately")
+		infoLabel2 = JLabel("type file extension")
+		self.filetype = JTextField(".tif",15)
 		grp = ButtonGroup()
 		grp.add(self.radiobutton1)
 		grp.add(self.radiobutton2)
 		buttonpanel.setLayout(BoxLayout(buttonpanel, BoxLayout.Y_AXIS))
 		buttonpanel.add(Box.createVerticalGlue())
+		buttonpanel.add(infoLabel2)
+		buttonpanel.add(self.filetype)
 		buttonpanel.add(infoLabel)
 		buttonpanel.add(self.radiobutton1)
 		buttonpanel.add(self.radiobutton2)
