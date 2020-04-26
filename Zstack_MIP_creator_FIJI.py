@@ -4,8 +4,9 @@ import os
 from ij.io import DirectoryChooser
 from ij import IJ, ImagePlus, VirtualStack, WindowManager
 from ij.plugin import ZProjector
+from ij.gui import Roi, Overlay, TextRoi
 from javax.swing import JFrame, JPanel, JLabel, JList, JButton, ListSelectionModel, JOptionPane, JScrollPane, JTextArea, JSplitPane, JRadioButton, Box, ButtonGroup, BoxLayout, JTextField
-from java.awt import BorderLayout, Dimension
+from java.awt import BorderLayout, Dimension, Font, Color
 
 class choice_gui:
 
@@ -90,12 +91,20 @@ class choice_gui:
 					ImStack = VirtualStack(imp.width, imp.height, None, self.sourceDir)
 				# Add a slice, relative to the sourceDIr
 				ImStack.addSlice(filename)
-			
+			#adding text overlay to output images so we can differentiate them. Overlay is non destructive - does not affect pixel values of image, and can be selected and deleted
+			prefix_overlay = Overlay()
+			font=Font("SansSerif", Font.PLAIN,10)
+			roi = TextRoi(0,0,a)
+			roi.setStrokeColor(Color(1.00,1.00,1.00))
+			prefix_overlay.add(roi)
+			#
 			OnscreenImage = ImagePlus(self.sourceDir,ImStack)
+			OnscreenImage.setOverlay(prefix_overlay)
 			OnscreenImage.show()
 			
 			print "Generating MIP, waiting..."
 			self.outimp = self.maxZprojection(OnscreenImage) #generate max projection
+			self.outimp.setOverlay(prefix_overlay)
 			self.outimp.show()
 			print "Max projection generated"
 			if self.saveState=="Y":
@@ -124,7 +133,7 @@ class choice_gui:
 		self.frame = JFrame("Image Selection")
 		self.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
 		self.frame.setLocation(100,100)
-		self.frame.setSize(640,250)
+		self.frame.setSize(800,400)
 		self.frame.setLayout(BorderLayout())
 
 		self.frame.add(self.lst, BorderLayout.NORTH)
@@ -139,21 +148,22 @@ class choice_gui:
 		buttonpanel = JPanel()
 		self.radiobutton1 = JRadioButton("Open selected 3D stacks and max projections \n and save max projections", True)
 		self.radiobutton2 = JRadioButton("Open selected 3D stacks and max projections \n and DO NOT save max projections")		
-		infoLabel = JLabel("Hold ctrl and click multiple prefixes to select multiple options \n will load stacks and MIPs separately")
+		infoLabel = JLabel("Hold ctrl and click multiple prefixes to select multiple options. \n Will load stacks and MIPs separately")
 		grp = ButtonGroup()
 		grp.add(self.radiobutton1)
 		grp.add(self.radiobutton2)
-		buttonpanel.setLayout(BoxLayout(buttonpanel, BoxLayout.Y_AXIS))
+		#buttonpanel.setLayout(BoxLayout(buttonpanel, BoxLayout.Y_AXIS))
 		buttonpanel.add(Box.createVerticalGlue())
 		buttonpanel.add(infoLabel)
 		buttonpanel.add(self.radiobutton1)
 		buttonpanel.add(self.radiobutton2)
 		buttonpanel.add(Box.createRigidArea(Dimension(0,25)))
-		#set up file extension panel
 		filetypepanel = JPanel()
+		#filetypepanel.setLayout(BoxLayout(filetypepanel, BoxLayout.Y_AXIS))
 		infoLabel2 = JLabel("type file extension")
 		self.filetype = JTextField(".tif",15)
 		self.filetype.setSize(100,100)
+		filetypepanel.add(infoLabel)
 		filetypepanel.add(infoLabel2)
 		filetypepanel.add(self.filetype)		
 		
@@ -165,12 +175,12 @@ class choice_gui:
 		########### !WIP
 		#add file extension and savestate panels to main panel
 		rightpanel.add(filetypepanel)
-		rightpanel.add(buttonpanel)
+		rightpanel.add(buttonpanel,BorderLayout.EAST)
 		
 #split list and radiobutton pane (construct overall window)
-		spl = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, JScrollPane(self.lst),JLabel("rightpane"))
+		spl = JSplitPane(JSplitPane.HORIZONTAL_SPLIT)
 		spl.leftComponent = JScrollPane(self.lst)
-		spl.setDividerLocation(100)
+		spl.setDividerLocation(150)
 		spl.rightComponent = rightpanel
 		self.frame.add(spl)
 		self.frame.add(self.button1, BorderLayout.SOUTH)
@@ -180,4 +190,3 @@ class choice_gui:
 
 choice = choice_gui()
 choice
-	
