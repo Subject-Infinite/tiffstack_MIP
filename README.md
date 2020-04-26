@@ -29,7 +29,7 @@ Running the macro:
 
 1. ![macro_1](https://i.imgur.com/BmIBzWD.png)
 
-From the plugins dropdown in Fiji ImageJ. Run from the Macros dropdown. Select the OpenStack_MaxZProj_2_fiji.py file
+From the plugins dropdown in Fiji ImageJ. Run from the Macros dropdown. Select the Zstack_MIP_creator_FIJI.py file
 
 2. ![macro_2](https://i.imgur.com/aVlxxj9.png)
 
