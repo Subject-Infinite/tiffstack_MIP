@@ -52,7 +52,7 @@ class choice_gui:
 		if self.radiobutton2.isSelected():
 			self.saveState = "N"
 			print "Don't save MIPs!"
-		self.exeunt = JOptionPane.showConfirmDialog(None, "You have chosen to make MIPs out of \n" + str(self.itemSelected) + "\n Proceed?" , "Proceed?", JOptionPane.YES_NO_OPTION)
+		self.exeunt = JOptionPane.showConfirmDialog(None, "You have chosen to make MIPs out of \n {} \n proceed?".format(str(self.itemSelected)), "Proceed?", JOptionPane.YES_NO_OPTION)
 		self.clickEx()
 		
 	def clickEx(self):
